@@ -20,6 +20,12 @@ variable "prefix" {
   description = "Prefix for Azure resource names."
 }
 
+variable "subscription_id" {
+  type        = string
+  default     = null
+  description = "Azure subscription to use for deployment"
+}
+
 variable "existing_resource_group" {
   type        = string
   default     = null
