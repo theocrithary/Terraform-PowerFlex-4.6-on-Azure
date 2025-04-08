@@ -34,13 +34,13 @@ module "azure_pfmp" {
   enable_jumphost                = var.enable_jumphost
   enable_sql_workload_vm         = var.enable_sql_workload_vm
   existing_resource_group        = var.existing_resource_group
-  installer_gallary_image        = var.installer_gallary_image
+  installer_gallary_image        = var.installer_gallery_image
   location                       = var.location
   login_credential               = var.login_credential
   pfmp_lb_ip                     = var.pfmp_lb_ip
   prefix                         = var.prefix
   ssh_key                        = var.ssh_key
-  storage_instance_gallary_image = var.storage_instance_gallary_image
+  storage_instance_gallary_image = var.storage_instance_gallery_image
   subnets                        = var.subnets
   vnet_address_space             = var.vnet_address_space
 }
