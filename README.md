@@ -1,6 +1,5 @@
 # PowerFlex Azure automation
-This project will deploy 4 x instances in AWS using Terraform based infrastructure as code. 
-The purpose of this script is to setup a Windows and Linux VM with several storage volumes to be used for performance testing and comparison benchmarking of AWS EBS storage and Dell PowerStore storage.
+This project will deploy PowerFlex in Azure using Terraform based infrastructure as code. 
 This was tested using a RHEL 8 Linux server as the host to run the terraform deployment and may require small tweaks to the code depending on which OS you are using.
 
 ## Step 1: Pre-reqs
@@ -21,13 +20,16 @@ sudo dnf install -y https://packages.microsoft.com/config/rhel/8/packages-micros
 sudo dnf install azure-cli
 ```
 
-### Agree and sign the EULA
-- Electronically sign and acknowledge the EULA
-[Software Evaluation License Agreement](https://pact.ly/HJb2H-)
-
 ### Login to Azure
+- If using SSO, you will need to do the following to authenticate
 ```
 az login --tenant xxxxxxxxxxxxxxxxxxxxx
+```
+- Use your browser that has access to SSO (i.e. not inside a jump host): https://microsoft.com/devicelogin
+- Enter the key, then your domain login password and token and you should be authenticated via SSO
+- If you have more than 1 tenant or subscription, you may be prompted to select the appropriate tenant or subscription.
+- Alternatively, if you have a service-principal account, use the following to login;
+```
 az login --service-principal -u <client-id> -p <client-secret> --tenant <tenant>
 ```
 
