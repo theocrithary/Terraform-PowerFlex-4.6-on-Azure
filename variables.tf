@@ -141,7 +141,7 @@ variable "installer_gallery_image" {
 
 variable "vnet_address_space" {
   type        = string
-  default     = "10.2.0.0/16"
+  default     = null
   description = "Virtual network address space."
 }
 
@@ -150,10 +150,7 @@ variable "subnets" {
     name   = string
     prefix = string
   }))
-  default = [{
-    name   = "BlockStorageSubnet"
-    prefix = "10.2.0.0/24"
-  }]
+  default = null
   description = "List of subnets for the virtual network."
 }
 
@@ -162,14 +159,11 @@ variable "bastion_subnet" {
     name   = string
     prefix = string
   })
-  default = {
-    name   = "AzureBastionSubnet"
-    prefix = "10.2.1.0/26"
-  }
+  default = null
   description = "Bastion subnet."
 }
 
 variable "pfmp_lb_ip" {
-  default     = "10.2.0.200"
+  default     = null
   description = "Load balancer IP for PFMP service."
 }
