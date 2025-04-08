@@ -28,10 +28,6 @@ az login --tenant xxxxxxxxxxxxxxxxxxxxx
 - Use your browser that has access to SSO (i.e. not inside a jump host): https://microsoft.com/devicelogin
 - Enter the key, then your domain login password and token and you should be authenticated via SSO
 - If you have more than 1 tenant or subscription, you may be prompted to select the appropriate tenant or subscription.
-- Alternatively, if you have a service-principal account, use the following to login;
-```
-az login --service-principal -u <client-id> -p <client-secret> --tenant <tenant>
-```
 
 ### verify the result
 ```
@@ -50,7 +46,7 @@ cd Terraform-PowerFlex-4.6-on-Azure
 
 ### Rename the vars.tf.example file to vars.tf
 ```
-mv vars-example-tf vars.tf
+mv terraform-example-tfvars terraform.tfvars
 ```
 
 ### Edit the vars.tf file and replace any variables with your own environment variables
