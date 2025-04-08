@@ -44,14 +44,14 @@ git clone https://github.com/theocrithary/Terraform-PowerFlex-4.6-on-Azure.git
 cd Terraform-PowerFlex-4.6-on-Azure
 ```
 
-### Rename the vars.tf.example file to vars.tf
+### Rename the terraform-example.tfvars file to terraform.tfvars
 ```
-mv terraform-example-tfvars terraform.tfvars
+mv terraform-example.tfvars terraform.tfvars
 ```
 
-### Edit the vars.tf file and replace any variables with your own environment variables
+### Edit the terraform.tfvars file and replace any variables with your own environment variables
 ```
-vi vars.tf
+vi terraform.tfvars
 ```
 
 ## Step 2: Run the Terraform deployment
