@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # /*
 # Copyright (c) 2024 Dell Inc., or its subsidiaries. All Rights Reserved.
 
@@ -15,18 +17,10 @@
 # limitations under the License.
 # */
 
-terraform {
-  required_version = ">=1.5.0"
-  required_providers {
-    tls = {
-      source  = "hashicorp/tls"
-      version = "~>4.0"
-    }
-  }
-}
-
-provider "azurerm" {
-  resource_provider_registrations = "none"
-  features {}
-  subscription_id = var.subscription_id
-}
+if
+    timeout 110m cloud-init status --wait
+then
+    echo "true"
+else
+    echo "false"
+fi
