@@ -230,19 +230,19 @@ resource "azurerm_mssql_virtual_machine" "sqlvm" {
 }
 
 data "azurerm_shared_image_version" "storage_instance_ami" {
-  count               = var.storage_instance_gallary_image != null ? 1 : 0
-  name                = var.storage_instance_gallary_image.name
-  image_name          = var.storage_instance_gallary_image.image_name
-  gallery_name        = var.storage_instance_gallary_image.gallery_name
-  resource_group_name = var.storage_instance_gallary_image.resource_group_name
+  count               = var.storage_instance_gallery_image != null ? 1 : 0
+  name                = var.storage_instance_gallery_image.name
+  image_name          = var.storage_instance_gallery_image.image_name
+  gallery_name        = var.storage_instance_gallery_image.gallery_name
+  resource_group_name = var.storage_instance_gallery_image.resource_group_name
 }
 
 data "azurerm_shared_image_version" "installer_ami" {
-  count               = var.installer_gallary_image != null ? 1 : 0
-  name                = var.installer_gallary_image.name
-  image_name          = var.installer_gallary_image.image_name
-  gallery_name        = var.installer_gallary_image.gallery_name
-  resource_group_name = var.installer_gallary_image.resource_group_name
+  count               = var.installer_gallery_image != null ? 1 : 0
+  name                = var.installer_gallery_image.name
+  image_name          = var.installer_gallery_image.image_name
+  gallery_name        = var.installer_gallery_image.gallery_name
+  resource_group_name = var.installer_gallery_image.resource_group_name
 }
 
 ## Create storage instance
@@ -277,10 +277,10 @@ resource "azurerm_linux_virtual_machine" "storage_instance" {
     disk_size_gb         = var.os_disk_size_gb
   }
 
-  source_image_id = var.storage_instance_gallary_image != null ? data.azurerm_shared_image_version.storage_instance_ami[0].id : null
+  source_image_id = var.storage_instance_gallery_image != null ? data.azurerm_shared_image_version.storage_instance_ami[0].id : null
 
   dynamic "source_image_reference" {
-    for_each = var.storage_instance_gallary_image == null ? [1] : []
+    for_each = var.storage_instance_gallery_image == null ? [1] : []
     content {
       publisher = local.storage_instance_image_reference.publisher
       offer     = local.storage_instance_image_reference.offer
@@ -290,7 +290,7 @@ resource "azurerm_linux_virtual_machine" "storage_instance" {
   }
 
   dynamic "plan" {
-    for_each = var.storage_instance_gallary_image == null ? [1] : []
+    for_each = var.storage_instance_gallery_image == null ? [1] : []
     content {
       name      = local.storage_instance_image_reference.sku
       publisher = local.storage_instance_image_reference.publisher
@@ -384,10 +384,10 @@ resource "azurerm_linux_virtual_machine" "installer" {
     disk_size_gb         = var.os_disk_size_gb
   }
 
-  source_image_id = var.installer_gallary_image != null ? data.azurerm_shared_image_version.installer_ami[0].id : null
+  source_image_id = var.installer_gallery_image != null ? data.azurerm_shared_image_version.installer_ami[0].id : null
 
   dynamic "source_image_reference" {
-    for_each = var.installer_gallary_image == null ? [1] : []
+    for_each = var.installer_gallery_image == null ? [1] : []
     content {
       publisher = local.installer_image_reference.publisher
       offer     = local.installer_image_reference.offer
@@ -397,7 +397,7 @@ resource "azurerm_linux_virtual_machine" "installer" {
   }
 
   dynamic "plan" {
-    for_each = var.installer_gallary_image == null ? [1] : []
+    for_each = var.installer_gallery_image == null ? [1] : []
     content {
       name      = local.installer_image_reference.sku
       publisher = local.installer_image_reference.publisher

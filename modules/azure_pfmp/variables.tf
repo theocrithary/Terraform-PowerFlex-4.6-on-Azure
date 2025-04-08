@@ -222,7 +222,7 @@ variable "image_reference" {
   description = "PowerFlex VM default image in Azure marketplace. Values from https://azuremarketplace.microsoft.com/en-us/marketplace/apps/dellemc.dell_apex_block_storage."
 }
 
-variable "storage_instance_gallary_image" {
+variable "storage_instance_gallery_image" {
   type = object({
     name                = string
     image_name          = string
@@ -230,10 +230,10 @@ variable "storage_instance_gallary_image" {
     resource_group_name = string
   })
   default     = null
-  description = "PowerFlex storage instance image in local gallary. If set, the storage instance vm will be created from this image."
+  description = "PowerFlex storage instance image in local gallery. If set, the storage instance vm will be created from this image."
 }
 
-variable "installer_gallary_image" {
+variable "installer_gallery_image" {
   type = object({
     name                = string
     image_name          = string
@@ -241,7 +241,7 @@ variable "installer_gallary_image" {
     resource_group_name = string
   })
   default     = null
-  description = "PowerFlex installer image in local gallary. If set, the installer vm will be created from this image."
+  description = "PowerFlex installer image in local gallery. If set, the installer vm will be created from this image."
 }
 
 variable "jumphost_image_reference" {
