@@ -1,0 +1,3 @@
+vars.tf
+keys/*
+do_not_commit.txt

@@ -21,12 +21,20 @@ sudo dnf install -y https://packages.microsoft.com/config/rhel/8/packages-micros
 sudo dnf install azure-cli
 ```
 
+### Agree and sign the EULA
+- Electronically sign and acknowledge the EULA
+[Software Evaluation License Agreement](https://pact.ly/HJb2H-)
+
 ### Login to Azure
 ```
 az login --tenant xxxxxxxxxxxxxxxxxxxxx
+az login --service-principal -u <client-id> -p <client-secret> --tenant <tenant>
 ```
 
-
+### verify the result
+```
+az account show
+```
 
 ### Clone the repo
 ```
