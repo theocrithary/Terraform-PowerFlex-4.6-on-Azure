@@ -19,8 +19,7 @@ module "azure_pfmp" {
   # Here the source points to the a local instance of the submodule in the modules folder, if you have and instance of the modules folder locally.
   # source         = "../../modules/azure_pfmp"
 
-  source  = "./azure_pfmp"
-  version = "1.3.0" // pull in the latest version like "1.2.0"
+  source  = "./modules/azure_pfmp"
 
   bastion_subnet = var.bastion_subnet
   cluster = {
