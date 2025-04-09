@@ -32,6 +32,12 @@ variable "location" {
   description = "Location for Azure resources."
 }
 
+variable "vnet_name" {
+  type        = string
+  default     = ""
+  description = "Virtual network name."
+}
+
 variable "vnet_address_space" {
   type        = string
   default     = "10.2.0.0/16"

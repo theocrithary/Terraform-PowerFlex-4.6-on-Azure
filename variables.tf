@@ -139,6 +139,12 @@ variable "installer_gallery_image" {
   description = "PowerFlex installer image in local gallary. If set, the installer vm will be created from this image."
 }
 
+variable "vnet_name" {
+  type        = string
+  default     = ""
+  description = "Virtual network name."
+}
+
 variable "vnet_address_space" {
   type        = string
   default     = ""

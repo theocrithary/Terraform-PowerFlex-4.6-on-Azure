@@ -54,21 +54,18 @@ data "azurerm_resource_group" "pflex_rg" {
   name  = var.existing_resource_group
 }
 
-## Create virtual network
-resource "azurerm_virtual_network" "pflex_network" {
-  name                = "${var.prefix}-vnet"
-  address_space       = [var.vnet_address_space]
-  location            = local.resource_group.location
-  resource_group_name = local.resource_group.name
+## Get existing virtual network
+data "azurerm_virtual_network" "pflex_network" {
+  name                = var.vnet_name
+  resource_group_name = var.existing_resource_group
 }
 
-## Create subnet
-resource "azurerm_subnet" "pflex_subnets" {
-  count                = length(var.subnets)
-  name                 = var.subnets[count.index].name
-  resource_group_name  = local.resource_group.name
-  virtual_network_name = azurerm_virtual_network.pflex_network.name
-  address_prefixes     = [var.subnets[count.index].prefix]
+## Get existing subnets
+data "azurerm_subnet" "pflex_subnets" {
+  for_each            = toset(data.azurerm_virtual_network.pflex_network.subnets)
+  name                = each.value
+  virtual_network_name = data.azurerm_virtual_network.pflex_network.name
+  resource_group_name = data.azurerm_virtual_network.pflex_network.resource_group_name
 }
 
 ## Create Network Security Group and rule
