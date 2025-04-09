@@ -57,7 +57,7 @@ data "azurerm_resource_group" "pflex_rg" {
 ## Get existing virtual network
 data "azurerm_virtual_network" "pflex_network" {
   name                = var.vnet_name
-  resource_group_name = var.existing_resource_group
+  resource_group_name = var.vnet_resource_group
 }
 
 ## Get existing subnets

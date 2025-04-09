@@ -38,6 +38,12 @@ variable "vnet_name" {
   description = "Virtual network name."
 }
 
+variable "vnet_resource_group" {
+  type        = string
+  default     = ""
+  description = "Virtual network resource group."
+}
+
 variable "vnet_address_space" {
   type        = string
   default     = "10.2.0.0/16"

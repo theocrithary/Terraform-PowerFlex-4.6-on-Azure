@@ -145,6 +145,12 @@ variable "vnet_name" {
   description = "Virtual network name."
 }
 
+variable "vnet_resource_group" {
+  type        = string
+  default     = ""
+  description = "Virtual network name."
+}
+
 variable "vnet_address_space" {
   type        = string
   default     = ""
