@@ -93,16 +93,15 @@ resource "azurerm_network_security_group" "pflex_nsg" {
 resource "azurerm_subnet_network_security_group_association" "pflex_nsg_association" {
   count                     = length(var.subnets)
   network_security_group_id = azurerm_network_security_group.pflex_nsg.id
-  subnet_id                 = azurerm_subnet.pflex_subnets[count.index].id
+  subnet_id                 = data.azurerm_subnet.pflex_subnets[count.index].id
 }
-
 
 ## Create bastion
 resource "azurerm_subnet" "pflex_bastion_subnet" {
   count                = var.enable_bastion ? 1 : 0
   name                 = var.bastion_subnet.name
   resource_group_name  = local.resource_group.name
-  virtual_network_name = azurerm_virtual_network.pflex_network.name
+  virtual_network_name = data.azurerm_virtual_network.pflex_network.name
   address_prefixes     = [var.bastion_subnet.prefix]
 }
 
@@ -140,7 +139,7 @@ resource "azurerm_network_interface" "jumphost_nic" {
 
   ip_configuration {
     name                          = "nic_configuration"
-    subnet_id                     = azurerm_subnet.pflex_subnets[0].id
+    subnet_id                     = data.azurerm_subnet.pflex_subnets[0].id
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -179,7 +178,7 @@ resource "azurerm_network_interface" "sqlvm_nic" {
 
   ip_configuration {
     name                          = "nic_configuration"
-    subnet_id                     = azurerm_subnet.pflex_subnets[0].id
+    subnet_id                     = data.azurerm_subnet.pflex_subnets[0].id
     private_ip_address_allocation = "Dynamic"
   }
 }
