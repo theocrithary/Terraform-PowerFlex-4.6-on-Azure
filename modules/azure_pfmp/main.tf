@@ -96,13 +96,13 @@ resource "azurerm_subnet_network_security_group_association" "pflex_nsg_associat
 }
 
 data "azurerm_shared_image" "storage_image" {
-  name                = var.storage_instance_gallery_image.name
+  name                = var.storage_instance_gallery_image.image_name
   gallery_name        = var.storage_instance_gallery_image.gallery_name
   resource_group_name = var.storage_instance_gallery_image.resource_group_name
 }
 
 data "azurerm_shared_image" "installer_image" {
-  name                = var.installer_gallery_image.name
+  name                = var.installer_gallery_image.image_name
   gallery_name        = var.installer_gallery_image.gallery_name
   resource_group_name = var.installer_gallery_image.resource_group_name
 }
