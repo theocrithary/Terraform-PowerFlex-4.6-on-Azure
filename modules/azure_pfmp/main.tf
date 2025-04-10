@@ -368,14 +368,6 @@ resource "azurerm_network_interface_backend_address_pool_association" "lb_be_poo
   backend_address_pool_id = azurerm_lb_backend_address_pool.lb_be_pool.id
 }
 
-output "bastion_tunnel" {
-  value = length(azurerm_bastion_host.bastion_host) > 0 ? {
-    bastion_name   = azurerm_bastion_host.bastion_host[0].name
-    resource_group = local.resource_group.name
-    installer_id   = azurerm_linux_virtual_machine.installer.id
-  } : null
-}
-
 output "sds_nodes" {
   value = [
     for i in range(var.cluster.node_count) :
