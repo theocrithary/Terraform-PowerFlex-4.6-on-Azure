@@ -40,6 +40,7 @@ locals {
 
   invalid_rg_name = "!!i_am_not_a_valid_name!!"
   resource_group  = coalesce(var.existing_resource_group, local.invalid_rg_name) == local.invalid_rg_name ? azurerm_resource_group.pflex_rg[0] : data.azurerm_resource_group.pflex_rg[0]
+  subnet_list = tolist(data.azurerm_subnet.pflex_subnets)
 }
 
 ## Create resource group
@@ -93,7 +94,7 @@ resource "azurerm_network_security_group" "pflex_nsg" {
 resource "azurerm_subnet_network_security_group_association" "pflex_nsg_association" {
   count                     = length(var.subnets)
   network_security_group_id = azurerm_network_security_group.pflex_nsg.id
-  subnet_id                 = tolist(data.azurerm_subnet.pflex_subnets)[count.index].id
+  subnet_id                 = local.subnet_list[count.index].id
 }
 
 ## Create bastion
@@ -139,7 +140,7 @@ resource "azurerm_network_interface" "jumphost_nic" {
 
   ip_configuration {
     name                          = "nic_configuration"
-    subnet_id                     = tolist(data.azurerm_subnet.pflex_subnets)[0].id
+    subnet_id                     = local.subnet_list[0].id
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -178,7 +179,7 @@ resource "azurerm_network_interface" "sqlvm_nic" {
 
   ip_configuration {
     name                          = "nic_configuration"
-    subnet_id                     = tolist(data.azurerm_subnet.pflex_subnets)[0].id
+    subnet_id                     = local.subnet_list[0].id
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -252,7 +253,7 @@ resource "azurerm_network_interface" "storage_instance_nic" {
 
   ip_configuration {
     name                          = "nic_configuration"
-    subnet_id                     = tolist(data.azurerm_subnet.pflex_subnets)[0].id
+    subnet_id                     = local.subnet_list[0].id
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -360,7 +361,7 @@ resource "azurerm_network_interface" "installer_nic" {
 
   ip_configuration {
     name                          = "nic_configuration"
-    subnet_id                     = tolist(data.azurerm_subnet.pflex_subnets)[0].id
+    subnet_id                     = local.subnet_list[0].id
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -491,7 +492,7 @@ resource "azurerm_lb" "load_balancer" {
     name                          = "${var.prefix}-lb-ip"
     private_ip_address_allocation = "Static"
     private_ip_address            = var.pfmp_lb_ip
-    subnet_id                     = tolist(data.azurerm_subnet.pflex_subnets)[0].id
+    subnet_id                     = local.subnet_list[0].id
     zones                         = local.availability_zones
   }
 }
