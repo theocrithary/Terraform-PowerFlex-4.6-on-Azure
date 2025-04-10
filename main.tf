@@ -21,7 +21,6 @@ module "azure_pfmp" {
 
   source  = "./modules/azure_pfmp"
 
-  bastion_subnet = var.bastion_subnet
   cluster = {
     node_count        = var.cluster_node_count
     is_multi_az       = var.is_multi_az
@@ -30,9 +29,6 @@ module "azure_pfmp" {
     data_disk_size_gb = var.data_disk_size_gb
   }
   data_disk_logical_sector_size  = var.data_disk_logical_sector_size
-  enable_bastion                 = var.enable_bastion
-  enable_jumphost                = var.enable_jumphost
-  enable_sql_workload_vm         = var.enable_sql_workload_vm
   existing_resource_group        = var.existing_resource_group
   installer_gallery_image        = var.installer_gallery_image
   location                       = var.location
@@ -47,10 +43,6 @@ module "azure_pfmp" {
   vnet_name                      = var.vnet_name
   vnet_resource_group            = var.vnet_resource_group
   vnet_address_space             = var.vnet_address_space
-}
-
-output "bastion_tunnel" {
-  value = module.azure_pfmp.bastion_tunnel != null ? "az network bastion tunnel --name ${module.azure_pfmp.bastion_tunnel.bastion_name} --resource-group ${module.azure_pfmp.bastion_tunnel.resource_group} --target-resource-id ${module.azure_pfmp.bastion_tunnel.installer_id} --resource-port 22 --port 1111" : null
 }
 
 output "pfmp_ip" {

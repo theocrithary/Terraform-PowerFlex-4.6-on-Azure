@@ -38,24 +38,6 @@ variable "location" {
   description = "Location for Azure resources."
 }
 
-variable "enable_bastion" {
-  type        = bool
-  default     = false
-  description = "Enable bastion."
-}
-
-variable "enable_jumphost" {
-  type        = bool
-  default     = false
-  description = "Enable jumphost."
-}
-
-variable "enable_sql_workload_vm" {
-  type        = bool
-  default     = false
-  description = "Enable sql workload vm."
-}
-
 variable "cluster_node_count" {
   type        = number
   default     = 5
@@ -123,6 +105,9 @@ variable "storage_instance_gallery_image" {
     image_name          = string
     gallery_name        = string
     resource_group_name = string
+    publisher           = string
+    offer               = string
+    sku                 = string
   })
   default     = null
   description = "PowerFlex storage instance image in local gallary. If set, the storage instance vm will be created from this image."
@@ -134,6 +119,9 @@ variable "installer_gallery_image" {
     image_name          = string
     gallery_name        = string
     resource_group_name = string
+    publisher           = string
+    offer               = string
+    sku                 = string
   })
   default     = null
   description = "PowerFlex installer image in local gallary. If set, the installer vm will be created from this image."
@@ -173,18 +161,6 @@ variable "subnet_zone3" {
   type = string
   default = ""
   description = "Subnet for zone 3 for the virtual network."
-}
-
-variable "bastion_subnet" {
-  type = object({
-    name   = string
-    prefix = string
-  })
-  default = {
-    name   = "AzureBastionSubnet"
-    prefix = ""
-  }
-  description = "Bastion subnet."
 }
 
 variable "pfmp_lb_ip" {

@@ -68,36 +68,6 @@ variable "subnet_zone3" {
   description = "Subnet for zone 3 for the virtual network."
 }
 
-variable "enable_bastion" {
-  type        = bool
-  default     = false
-  description = "Enable bastion."
-}
-
-variable "bastion_subnet" {
-  type = object({
-    name   = string
-    prefix = string
-  })
-  default = {
-    name   = "AzureBastionSubnet"
-    prefix = "10.2.1.0/26"
-  }
-  description = "Bastion subnet."
-}
-
-variable "enable_jumphost" {
-  type        = bool
-  default     = false
-  description = "Enable jumphost."
-}
-
-variable "enable_sql_workload_vm" {
-  type        = bool
-  default     = false
-  description = "Enable sql workload vm."
-}
-
 # TODO: Add more validation according to:
 # https://infohub.delltechnologies.com/en-us/l/dell-apex-block-storage-for-microsoft-azure/azure-storage-considerations/
 variable "cluster" {
@@ -214,32 +184,15 @@ variable "os_disk_size_gb" {
 # sku: apexblockstorage, installer45, apexblockstorage-4_6_0, apexblockstorageinstaller-4_6_0
 # version: 4.5.0, 4.6.0
 
-variable "image_reference" {
-  type = object({
-    publisher    = string
-    offer        = string
-    storage460   = string
-    storage450   = string
-    installer460 = string
-    installer450 = string
-  })
-  default = {
-    publisher    = "dellemc"
-    offer        = "dell_apex_block_storage"
-    storage460   = "apexblockstorage-4_6_0"
-    storage450   = "apexblockstorage"
-    installer460 = "apexblockstorageinstaller-4_6_0"
-    installer450 = "installer45"
-  }
-  description = "PowerFlex VM default image in Azure marketplace. Values from https://azuremarketplace.microsoft.com/en-us/marketplace/apps/dellemc.dell_apex_block_storage."
-}
-
 variable "storage_instance_gallery_image" {
   type = object({
     name                = string
     image_name          = string
     gallery_name        = string
     resource_group_name = string
+    publisher           = string
+    offer               = string
+    sku                 = string
   })
   default     = null
   description = "PowerFlex storage instance image in local gallery. If set, the storage instance vm will be created from this image."
@@ -251,41 +204,12 @@ variable "installer_gallery_image" {
     image_name          = string
     gallery_name        = string
     resource_group_name = string
+    publisher           = string
+    offer               = string
+    sku                 = string
   })
   default     = null
   description = "PowerFlex installer image in local gallery. If set, the installer vm will be created from this image."
-}
-
-variable "jumphost_image_reference" {
-  type = object({
-    publisher = string
-    offer     = string
-    sku       = string
-    version   = string
-  })
-  default = {
-    publisher = "MicrosoftWindowsServer"
-    offer     = "WindowsServer"
-    sku       = "2022-datacenter-azure-edition"
-    version   = "latest"
-  }
-  description = "Jumphost image."
-}
-
-variable "sqlvm_image_reference" {
-  type = object({
-    publisher = string
-    offer     = string
-    sku       = string
-    version   = string
-  })
-  default = {
-    publisher = "microsoftsqlserver"
-    offer     = "sql2022-ws2022"
-    sku       = "sqldev-gen2"
-    version   = "16.0.240923"
-  }
-  description = "Sqlvm image."
 }
 
 variable "login_credential" {

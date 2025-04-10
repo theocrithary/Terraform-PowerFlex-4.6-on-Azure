@@ -24,20 +24,6 @@ locals {
 
   availability_zones = var.cluster.is_multi_az ? var.availability_zones : [element(var.availability_zones, 0)]
 
-  storage_instance_image_reference = {
-    publisher = var.image_reference.publisher
-    offer     = var.image_reference.offer
-    sku       = var.image_reference.storage460
-    version   = "4.6.0"
-  }
-
-  installer_image_reference = {
-    publisher = var.image_reference.publisher
-    offer     = var.image_reference.offer
-    sku       = var.image_reference.installer460
-    version   = "4.6.0"
-  }
-
   invalid_rg_name = "!!i_am_not_a_valid_name!!"
   resource_group  = coalesce(var.existing_resource_group, local.invalid_rg_name) == local.invalid_rg_name ? azurerm_resource_group.pflex_rg[0] : data.azurerm_resource_group.pflex_rg[0]
 }
@@ -109,135 +95,6 @@ resource "azurerm_subnet_network_security_group_association" "pflex_nsg_associat
   subnet_id           = data.azurerm_subnet.pflex_subnet_zone1.id
 }
 
-## Create bastion
-resource "azurerm_subnet" "pflex_bastion_subnet" {
-  count                = var.enable_bastion ? 1 : 0
-  name                 = var.bastion_subnet.name
-  resource_group_name  = local.resource_group.name
-  virtual_network_name = data.azurerm_virtual_network.pflex_network.name
-  address_prefixes     = [var.bastion_subnet.prefix]
-}
-
-resource "azurerm_public_ip" "bastion_public_ip" {
-  count               = var.enable_bastion ? 1 : 0
-  name                = "${var.prefix}-bastion-public-ip"
-  location            = local.resource_group.location
-  resource_group_name = local.resource_group.name
-  allocation_method   = "Static"
-  sku                 = "Standard"
-}
-
-resource "azurerm_bastion_host" "bastion_host" {
-  count               = var.enable_bastion ? 1 : 0
-  name                = "${var.prefix}-bastion"
-  location            = local.resource_group.location
-  resource_group_name = local.resource_group.name
-  tunneling_enabled   = true
-  sku                 = "Standard"
-
-  ip_configuration {
-    name                 = "${var.prefix}-bastion-configuration"
-    subnet_id            = azurerm_subnet.pflex_bastion_subnet[0].id
-    public_ip_address_id = azurerm_public_ip.bastion_public_ip[0].id
-  }
-}
-
-
-## Create jumphost
-resource "azurerm_network_interface" "jumphost_nic" {
-  count               = var.enable_jumphost ? 1 : 0
-  name                = "${var.prefix}-jumphost-nic"
-  location            = local.resource_group.location
-  resource_group_name = local.resource_group.name
-
-  ip_configuration {
-    name                          = "nic_configuration"
-    subnet_id                     = data.azurerm_subnet.pflex_subnet_zone1.id
-    private_ip_address_allocation = "Dynamic"
-  }
-}
-
-resource "azurerm_windows_virtual_machine" "jumphost_vm" {
-  count                 = var.enable_jumphost ? 1 : 0
-  name                  = "${var.prefix}-jumphost-vm"
-  location              = local.resource_group.location
-  resource_group_name   = local.resource_group.name
-  zone                  = local.availability_zones[0]
-  network_interface_ids = [azurerm_network_interface.jumphost_nic[0].id]
-  size                  = var.vm_size.jumphost
-  admin_username        = var.login_credential.username
-  admin_password        = var.login_credential.password
-  computer_name         = "jumphost"
-
-  os_disk {
-    name                 = "${var.prefix}-jumphost-os-disk"
-    caching              = "ReadWrite"
-    storage_account_type = "Premium_LRS"
-  }
-  source_image_reference {
-    publisher = var.jumphost_image_reference.publisher
-    offer     = var.jumphost_image_reference.offer
-    sku       = var.jumphost_image_reference.sku
-    version   = var.jumphost_image_reference.version
-  }
-}
-
-## Optional SQL VM for workload validation testing
-resource "azurerm_network_interface" "sqlvm_nic" {
-  count               = var.enable_sql_workload_vm ? 1 : 0
-  name                = "${var.prefix}-sqlvm-nic"
-  location            = local.resource_group.location
-  resource_group_name = local.resource_group.name
-
-  ip_configuration {
-    name                          = "nic_configuration"
-    subnet_id                     = data.azurerm_subnet.pflex_subnet_zone1.id
-    private_ip_address_allocation = "Dynamic"
-  }
-}
-
-resource "azurerm_windows_virtual_machine" "sqlvm" {
-  count                 = var.enable_sql_workload_vm ? 1 : 0
-  name                  = "${var.prefix}-sql-vm"
-  location              = local.resource_group.location
-  resource_group_name   = local.resource_group.name
-  zone                  = local.availability_zones[0]
-  network_interface_ids = [azurerm_network_interface.sqlvm_nic[0].id]
-  size                  = var.vm_size.sqlvm
-  admin_username        = var.login_credential.username
-  admin_password        = var.login_credential.password
-  computer_name         = "sqlvm"
-
-  os_disk {
-    name                 = "${var.prefix}-sqlvm-os-disk"
-    caching              = "ReadWrite"
-    storage_account_type = "StandardSSD_LRS"
-    disk_size_gb         = var.os_disk_size_gb
-  }
-
-  source_image_reference {
-    publisher = var.sqlvm_image_reference.publisher
-    offer     = var.sqlvm_image_reference.offer
-    sku       = var.sqlvm_image_reference.sku
-    version   = var.sqlvm_image_reference.version
-  }
-}
-
-resource "azurerm_mssql_virtual_machine" "sqlvm" {
-  count                            = var.enable_sql_workload_vm ? 1 : 0
-  virtual_machine_id               = azurerm_windows_virtual_machine.sqlvm[0].id
-  sql_license_type                 = "PAYG"
-  r_services_enabled               = false
-  sql_connectivity_port            = 1433
-  sql_connectivity_type            = "PRIVATE"
-  sql_connectivity_update_password = "PowerFlex123!"
-  sql_connectivity_update_username = "pflexuser"
-
-  sql_instance {
-    max_server_memory_mb = "12000"
-  }
-}
-
 data "azurerm_shared_image_version" "storage_instance_ami" {
   count               = var.storage_instance_gallery_image != null ? 1 : 0
   name                = var.storage_instance_gallery_image.name
@@ -286,25 +143,10 @@ resource "azurerm_linux_virtual_machine" "storage_instance" {
     disk_size_gb         = var.os_disk_size_gb
   }
 
-  source_image_id = var.storage_instance_gallery_image != null ? data.azurerm_shared_image_version.storage_instance_ami[0].id : null
-
-  dynamic "source_image_reference" {
-    for_each = var.storage_instance_gallery_image == null ? [1] : []
-    content {
-      publisher = local.storage_instance_image_reference.publisher
-      offer     = local.storage_instance_image_reference.offer
-      sku       = local.storage_instance_image_reference.sku
-      version   = local.storage_instance_image_reference.version
-    }
-  }
-
-  dynamic "plan" {
-    for_each = var.storage_instance_gallery_image == null ? [1] : []
-    content {
-      name      = local.storage_instance_image_reference.sku
-      publisher = local.storage_instance_image_reference.publisher
-      product   = local.storage_instance_image_reference.offer
-    }
+  plan {
+    name      = var.storage_instance_gallery_image.sku
+    publisher = var.storage_instance_gallery_image.publisher
+    product   = var.storage_instance_gallery_image.offer
   }
 
   disable_password_authentication = false
@@ -393,25 +235,10 @@ resource "azurerm_linux_virtual_machine" "installer" {
     disk_size_gb         = var.os_disk_size_gb
   }
 
-  source_image_id = var.installer_gallery_image != null ? data.azurerm_shared_image_version.installer_ami[0].id : null
-
-  dynamic "source_image_reference" {
-    for_each = var.installer_gallery_image == null ? [1] : []
-    content {
-      publisher = local.installer_image_reference.publisher
-      offer     = local.installer_image_reference.offer
-      sku       = local.installer_image_reference.sku
-      version   = local.installer_image_reference.version
-    }
-  }
-
-  dynamic "plan" {
-    for_each = var.installer_gallery_image == null ? [1] : []
-    content {
-      name      = local.installer_image_reference.sku
-      publisher = local.installer_image_reference.publisher
-      product   = local.installer_image_reference.offer
-    }
+  plan {
+    name      = var.installer_gallery_image.sku
+    publisher = var.installer_gallery_image.publisher
+    product   = var.installer_gallery_image.offer
   }
 
   disable_password_authentication = false
