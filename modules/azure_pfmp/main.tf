@@ -95,18 +95,14 @@ resource "azurerm_subnet_network_security_group_association" "pflex_nsg_associat
   subnet_id           = data.azurerm_subnet.pflex_subnet_zone1.id
 }
 
-data "azurerm_shared_image_version" "storage_instance_ami" {
-  count               = var.storage_instance_gallery_image != null ? 1 : 0
+data "azurerm_shared_image" "storage_image" {
   name                = var.storage_instance_gallery_image.name
-  image_name          = var.storage_instance_gallery_image.image_name
   gallery_name        = var.storage_instance_gallery_image.gallery_name
   resource_group_name = var.storage_instance_gallery_image.resource_group_name
 }
 
-data "azurerm_shared_image_version" "installer_ami" {
-  count               = var.installer_gallery_image != null ? 1 : 0
+data "azurerm_shared_image" "installer_image" {
   name                = var.installer_gallery_image.name
-  image_name          = var.installer_gallery_image.image_name
   gallery_name        = var.installer_gallery_image.gallery_name
   resource_group_name = var.installer_gallery_image.resource_group_name
 }
@@ -149,7 +145,7 @@ resource "azurerm_linux_virtual_machine" "storage_instance" {
     product   = var.storage_instance_gallery_image.offer
   }
 
-  source_image_id = data.azurerm_shared_image_version.storage_instance_ami.id
+  source_image_id = data.azurerm_shared_image.storage_instance.id
 
   disable_password_authentication = false
   admin_username                  = var.login_credential.username
@@ -243,7 +239,7 @@ resource "azurerm_linux_virtual_machine" "installer" {
     product   = var.installer_gallery_image.offer
   }
 
-  source_image_id = data.azurerm_shared_image_version.installer_ami.id
+  source_image_id = data.azurerm_shared_image.installer.id
 
   disable_password_authentication = false
   admin_username                  = var.login_credential.username
