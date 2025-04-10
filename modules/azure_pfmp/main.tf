@@ -106,7 +106,7 @@ resource "azurerm_network_security_group" "pflex_nsg" {
 
 resource "azurerm_subnet_network_security_group_association" "pflex_nsg_association" {
   network_security_group_id = azurerm_network_security_group.pflex_nsg.id
-  subnet_id           = data.pflex_subnet_zone1.id
+  subnet_id           = data.azurerm_subnet.pflex_subnet_zone1.id
 }
 
 ## Create bastion
@@ -152,7 +152,7 @@ resource "azurerm_network_interface" "jumphost_nic" {
 
   ip_configuration {
     name                          = "nic_configuration"
-    subnet_id                     = data.pflex_subnet_zone1.id
+    subnet_id                     = data.azurerm_subnet.pflex_subnet_zone1.id
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -191,7 +191,7 @@ resource "azurerm_network_interface" "sqlvm_nic" {
 
   ip_configuration {
     name                          = "nic_configuration"
-    subnet_id                     = data.pflex_subnet_zone1.id
+    subnet_id                     = data.azurerm_subnet.pflex_subnet_zone1.id
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -265,7 +265,7 @@ resource "azurerm_network_interface" "storage_instance_nic" {
 
   ip_configuration {
     name                          = "nic_configuration"
-    subnet_id                     = data.pflex_subnet_zone1.id
+    subnet_id                     = data.azurerm_subnet.pflex_subnet_zone1.id
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -373,7 +373,7 @@ resource "azurerm_network_interface" "installer_nic" {
 
   ip_configuration {
     name                          = "nic_configuration"
-    subnet_id                     = data.pflex_subnet_zone1.id
+    subnet_id                     = data.azurerm_subnet.pflex_subnet_zone1.id
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -504,7 +504,7 @@ resource "azurerm_lb" "load_balancer" {
     name                          = "${var.prefix}-lb-ip"
     private_ip_address_allocation = "Static"
     private_ip_address            = var.pfmp_lb_ip
-    subnet_id                     = data.pflex_subnet_zone1.id
+    subnet_id                     = data.azurerm_subnet.pflex_subnet_zone1.id
     zones                         = local.availability_zones
   }
 }
