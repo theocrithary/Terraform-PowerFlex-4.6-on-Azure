@@ -252,6 +252,7 @@ resource "azurerm_linux_virtual_machine" "installer" {
   custom_data = base64encode(templatefile("${path.module}/init_pfmp_config.sh", {
     nodes_name      = join(",", azurerm_linux_virtual_machine.storage_instance[*].name)
     nodes_ip        = join(",", azurerm_network_interface.storage_instance_nic[*].ip_configuration.0.private_ip_address)
+    lb_ip           = data.azurerm_lb.load_balancer.frontend_ip_configuration[0].private_ip_address
     login_username  = var.login_credential.username
     login_password  = var.login_credential.password
     sshkey          = file("${var.ssh_key.private}")
