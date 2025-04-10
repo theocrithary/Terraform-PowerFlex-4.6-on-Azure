@@ -62,21 +62,21 @@ data "azurerm_virtual_network" "pflex_network" {
 
 ## Get subnet for zone 1
 data "azurerm_subnet" "pflex_subnet_zone1" {
-  name                = var.subnet_zone1.name
+  name                = var.subnet_zone1
   virtual_network_name = data.azurerm_virtual_network.pflex_network.name
   resource_group_name = data.azurerm_virtual_network.pflex_network.resource_group_name
 }
 
 ## Get subnet for zone 2
 data "azurerm_subnet" "pflex_subnet_zone2" {
-  name                = var.subnet_zone2.name
+  name                = var.subnet_zone2
   virtual_network_name = data.azurerm_virtual_network.pflex_network.name
   resource_group_name = data.azurerm_virtual_network.pflex_network.resource_group_name
 }
 
 ## Get subnet for zone 3
 data "azurerm_subnet" "pflex_subnet_zone3" {
-  name                = var.subnet_zone3.name
+  name                = var.subnet_zone3
   virtual_network_name = data.azurerm_virtual_network.pflex_network.name
   resource_group_name = data.azurerm_virtual_network.pflex_network.resource_group_name
 }
