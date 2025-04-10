@@ -372,7 +372,6 @@ data "azurerm_lb" "load_balancer" {
   resource_group_name      = local.resource_group.name
 }
 
-
 output "sds_nodes" {
   value = [
     for i in range(var.cluster.node_count) :
@@ -381,4 +380,8 @@ output "sds_nodes" {
       "ip"       = azurerm_network_interface.storage_instance_nic[i].ip_configuration.0.private_ip_address
     }
   ]
+}
+
+output "pfmp_ip" {
+  value = data.azurerm_lb.load_balancer.frontend_ip_configuration[0].private_ip_address
 }
