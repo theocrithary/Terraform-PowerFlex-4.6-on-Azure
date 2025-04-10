@@ -252,12 +252,6 @@ variable "data_disk_logical_sector_size" {
   description = "Logical Sector Size. Possible values are: 512 and 4096. Please refer to https://www.dell.com/support/manuals/en-hk/scaleio/flex-cloud-azure-deploy-45x/create-the-virtual-machine-for-the-storage-instance?guid=guid-c87fe065-5e65-4c96-84b9-a8f5065230cd&lang=en-us."
 }
 
-variable "pfmp_lb_ip" {
-  type        = string
-  default     = "10.2.0.200"
-  description = "Load balancer IP for PFMP service."
-}
-
 variable "nsg_rules" {
   type = list(object({
     name                       = string

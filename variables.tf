@@ -162,8 +162,3 @@ variable "subnet_zone3" {
   default = ""
   description = "Subnet for zone 3 for the virtual network."
 }
-
-variable "pfmp_lb_ip" {
-  default     = ""
-  description = "Load balancer IP for PFMP service."
-}

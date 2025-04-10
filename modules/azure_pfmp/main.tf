@@ -252,7 +252,6 @@ resource "azurerm_linux_virtual_machine" "installer" {
   custom_data = base64encode(templatefile("${path.module}/init_pfmp_config.sh", {
     nodes_name      = join(",", azurerm_linux_virtual_machine.storage_instance[*].name)
     nodes_ip        = join(",", azurerm_network_interface.storage_instance_nic[*].ip_configuration.0.private_ip_address)
-    lb_ip           = var.pfmp_lb_ip
     login_username  = var.login_credential.username
     login_password  = var.login_credential.password
     sshkey          = file("${var.ssh_key.private}")
@@ -329,8 +328,7 @@ resource "azurerm_lb" "load_balancer" {
 
   frontend_ip_configuration {
     name                          = "${var.prefix}-lb-ip"
-    private_ip_address_allocation = "Static"
-    private_ip_address            = var.pfmp_lb_ip
+    private_ip_address_allocation = "Dynamic"
     subnet_id                     = data.azurerm_subnet.pflex_subnet_zone1.id
     zones                         = local.availability_zones
   }
@@ -376,8 +374,4 @@ output "sds_nodes" {
       "ip"       = azurerm_network_interface.storage_instance_nic[i].ip_configuration.0.private_ip_address
     }
   ]
-}
-
-output "pfmp_ip" {
-  value = var.pfmp_lb_ip
 }
