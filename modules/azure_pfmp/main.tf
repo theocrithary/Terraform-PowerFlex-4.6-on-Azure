@@ -28,13 +28,7 @@ locals {
   resource_group  = coalesce(var.existing_resource_group, local.invalid_rg_name) == local.invalid_rg_name ? azurerm_resource_group.pflex_rg[0] : data.azurerm_resource_group.pflex_rg[0]
 }
 
-## Create resource group
-resource "azurerm_resource_group" "pflex_rg" {
-  count    = coalesce(var.existing_resource_group, local.invalid_rg_name) == local.invalid_rg_name ? 1 : 0
-  name     = "${var.prefix}-rg"
-  location = var.location
-}
-
+## Get resource group
 data "azurerm_resource_group" "pflex_rg" {
   count = coalesce(var.existing_resource_group, local.invalid_rg_name) != local.invalid_rg_name ? 1 : 0
   name  = var.existing_resource_group
@@ -67,34 +61,7 @@ data "azurerm_subnet" "pflex_subnet_zone3" {
   resource_group_name = data.azurerm_virtual_network.pflex_network.resource_group_name
 }
 
-
-## Create Network Security Group and rule
-resource "azurerm_network_security_group" "pflex_nsg" {
-  name                = "${var.prefix}-nsg"
-  location            = local.resource_group.location
-  resource_group_name = local.resource_group.name
-
-  dynamic "security_rule" {
-    for_each = var.nsg_rules
-    content {
-      name                       = security_rule.value.name
-      priority                   = security_rule.value.priority
-      direction                  = security_rule.value.direction
-      access                     = security_rule.value.access
-      protocol                   = security_rule.value.protocol
-      source_address_prefix      = security_rule.value.source_address_prefix
-      source_port_range          = security_rule.value.source_port_range
-      destination_address_prefix = security_rule.value.destination_address_prefix
-      destination_port_range     = security_rule.value.destination_port_range
-    }
-  }
-}
-
-resource "azurerm_subnet_network_security_group_association" "pflex_nsg_association" {
-  network_security_group_id = azurerm_network_security_group.pflex_nsg.id
-  subnet_id           = data.azurerm_subnet.pflex_subnet_zone1.id
-}
-
+## Get source images
 data "azurerm_shared_image" "storage_image" {
   name                = var.storage_instance_gallery_image.image_name
   gallery_name        = var.storage_instance_gallery_image.gallery_name
