@@ -76,8 +76,8 @@ data "azurerm_shared_image" "installer_image" {
 resource "azurerm_network_interface" "storage_instance_nic" {
   count                          = var.cluster.node_count
   name                           = "${var.prefix}-nic-${count.index}"
-  location                       = local.resource_group.location
-  resource_group_name            = local.resource_group.name
+  location                       = data.azurerm_local.resource_group.pflex_rg.location
+  resource_group_name            = data.azurerm_local.resource_group.pflex_rg.name
   accelerated_networking_enabled = var.enable_accelerated_networking
 
   ip_configuration {
@@ -90,8 +90,8 @@ resource "azurerm_network_interface" "storage_instance_nic" {
 resource "azurerm_linux_virtual_machine" "storage_instance" {
   count                 = var.cluster.node_count
   name                  = "${var.prefix}-vm-${count.index}"
-  location              = local.resource_group.location
-  resource_group_name   = local.resource_group.name
+  location              = data.azurerm_local.resource_group.pflex_rg.location
+  resource_group_name   = data.azurerm_local.resource_group.pflex_rg.name
   network_interface_ids = [azurerm_network_interface.storage_instance_nic[count.index].id]
   size                  = local.vm_size
   zone                  = local.availability_zones[count.index % length(local.availability_zones)]
@@ -130,8 +130,8 @@ resource "azurerm_linux_virtual_machine" "storage_instance" {
   # May not be needed when https://github.com/hashicorp/terraform-provider-azurerm/issues/20723 is implemented
   provisioner "local-exec" {
     command = count.index > 2 ? "whoami" : <<-EOT
-      az disk update -n ${var.prefix}-vm-${count.index}-os-disk -g ${local.resource_group.name} --set tier=P40 --no-wait
-      az disk wait --updated -n ${var.prefix}-vm-${count.index}-os-disk -g ${local.resource_group.name}
+      az disk update -n ${var.prefix}-vm-${count.index}-os-disk -g ${data.azurerm_local.resource_group.pflex_rg.name} --set tier=P40 --no-wait
+      az disk wait --updated -n ${var.prefix}-vm-${count.index}-os-disk -g ${data.azurerm_local.resource_group.pflex_rg.name}
     EOT
   }
 }
@@ -144,8 +144,8 @@ resource "azurerm_managed_disk" "data_disks" {
     }
   }
   name                 = "${var.prefix}-vm-${each.value.vm_index}-data-disk-${each.value.disk_index}"
-  location             = local.resource_group.location
-  resource_group_name  = local.resource_group.name
+  location             = data.azurerm_local.resource_group.pflex_rg.location
+  resource_group_name  = data.azurerm_local.resource_group.pflex_rg.name
   storage_account_type = "PremiumV2_LRS"
   create_option        = "Empty"
   disk_size_gb         = var.cluster.data_disk_size_gb
@@ -172,8 +172,8 @@ resource "azurerm_virtual_machine_data_disk_attachment" "vm_data_disk_attachment
 ## Create Installer
 resource "azurerm_network_interface" "installer_nic" {
   name                = "${var.prefix}-installer-nic"
-  location            = local.resource_group.location
-  resource_group_name = local.resource_group.name
+  location            = data.azurerm_local.resource_group.pflex_rg.location
+  resource_group_name = data.azurerm_local.resource_group.pflex_rg.name
 
   ip_configuration {
     name                          = "nic_configuration"
@@ -184,8 +184,8 @@ resource "azurerm_network_interface" "installer_nic" {
 
 resource "azurerm_linux_virtual_machine" "installer" {
   name                  = "${var.prefix}-installer-vm"
-  location              = local.resource_group.location
-  resource_group_name   = local.resource_group.name
+  location              = data.azurerm_local.resource_group.pflex_rg.location
+  resource_group_name   = data.azurerm_local.resource_group.pflex_rg.name
   network_interface_ids = [azurerm_network_interface.installer_nic.id]
   size                  = var.vm_size.installer
   zone                  = local.availability_zones[0]
@@ -233,7 +233,7 @@ resource "azurerm_linux_virtual_machine" "installer" {
 # it supports for long running (hours/days) scripts, but it still seems to have 90 minutes limit.
 # Raised https://github.com/hashicorp/terraform-provider-azurerm/issues/27428
 resource "azurerm_virtual_machine_run_command" "wait_pfmp_installation1" {
-  location           = local.resource_group.location
+  location           = data.azurerm_local.resource_group.pflex_rg.location
   name               = "wait_pfmp_installation1"
   virtual_machine_id = azurerm_linux_virtual_machine.installer.id
 
@@ -248,7 +248,7 @@ resource "azurerm_virtual_machine_run_command" "wait_pfmp_installation1" {
 
 # The installation would take around 2 ~ 2.5hours, add a second wait to ensure the installation finishes.
 resource "azurerm_virtual_machine_run_command" "wait_pfmp_installation2" {
-  location           = local.resource_group.location
+  location           = data.azurerm_local.resource_group.pflex_rg.location
   name               = "wait_pfmp_installation2"
   virtual_machine_id = azurerm_linux_virtual_machine.installer.id
 
@@ -287,8 +287,8 @@ resource "azurerm_virtual_machine_run_command" "wait_pfmp_installation2" {
 ## Create Load Balancer
 resource "azurerm_lb" "load_balancer" {
   name                = "${var.prefix}-lb"
-  location            = local.resource_group.location
-  resource_group_name = local.resource_group.name
+  location            = data.azurerm_local.resource_group.pflex_rg.location
+  resource_group_name = data.azurerm_local.resource_group.pflex_rg.name
   sku                 = "Standard"
 
   frontend_ip_configuration {
