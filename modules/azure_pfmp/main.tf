@@ -40,7 +40,6 @@ locals {
 
   invalid_rg_name = "!!i_am_not_a_valid_name!!"
   resource_group  = coalesce(var.existing_resource_group, local.invalid_rg_name) == local.invalid_rg_name ? azurerm_resource_group.pflex_rg[0] : data.azurerm_resource_group.pflex_rg[0]
-  subnet_list = tolist(data.azurerm_subnet.pflex_subnets)
 }
 
 ## Create resource group
@@ -61,13 +60,27 @@ data "azurerm_virtual_network" "pflex_network" {
   resource_group_name = var.vnet_resource_group
 }
 
-## Get existing subnets
-data "azurerm_subnet" "pflex_subnets" {
-  for_each            = toset(data.azurerm_virtual_network.pflex_network.subnets)
-  name                = each.value
+## Get subnet for zone 1
+data "azurerm_subnet" "pflex_subnet_zone1" {
+  name                = var.subnet_zone1.name
   virtual_network_name = data.azurerm_virtual_network.pflex_network.name
   resource_group_name = data.azurerm_virtual_network.pflex_network.resource_group_name
 }
+
+## Get subnet for zone 2
+data "azurerm_subnet" "pflex_subnet_zone2" {
+  name                = var.subnet_zone2.name
+  virtual_network_name = data.azurerm_virtual_network.pflex_network.name
+  resource_group_name = data.azurerm_virtual_network.pflex_network.resource_group_name
+}
+
+## Get subnet for zone 3
+data "azurerm_subnet" "pflex_subnet_zone3" {
+  name                = var.subnet_zone3.name
+  virtual_network_name = data.azurerm_virtual_network.pflex_network.name
+  resource_group_name = data.azurerm_virtual_network.pflex_network.resource_group_name
+}
+
 
 ## Create Network Security Group and rule
 resource "azurerm_network_security_group" "pflex_nsg" {
@@ -92,9 +105,8 @@ resource "azurerm_network_security_group" "pflex_nsg" {
 }
 
 resource "azurerm_subnet_network_security_group_association" "pflex_nsg_association" {
-  count                     = length(var.subnets)
   network_security_group_id = azurerm_network_security_group.pflex_nsg.id
-  subnet_id                 = local.subnet_list[count.index].id
+  subnet_id           = data.pflex_subnet_zone1.id
 }
 
 ## Create bastion

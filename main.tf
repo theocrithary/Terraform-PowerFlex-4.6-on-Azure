@@ -41,7 +41,9 @@ module "azure_pfmp" {
   prefix                         = var.prefix
   ssh_key                        = var.ssh_key
   storage_instance_gallery_image = var.storage_instance_gallery_image
-  subnets                        = var.subnets
+  subnet_zone1                   = var.subnet_zone1
+  subnet_zone2                   = var.subnet_zone2
+  subnet_zone3                   = var.subnet_zone3
   vnet_name                      = var.vnet_name
   vnet_resource_group            = var.vnet_resource_group
   vnet_address_space             = var.vnet_address_space

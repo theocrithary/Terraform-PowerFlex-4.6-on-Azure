@@ -157,16 +157,40 @@ variable "vnet_address_space" {
   description = "Virtual network address space."
 }
 
-variable "subnets" {
-  type = list(object({
+variable "subnet_zone1" {
+  type = object({
     name   = string
     prefix = string
-  }))
-  default = [{
+  })
+  default = {
     name   = "BlockStorageSubnet"
     prefix = ""
-  }]
-  description = "List of subnets for the virtual network."
+  }
+  description = "Subnet for zone 1 for the virtual network."
+}
+
+variable "subnet_zone2" {
+  type = object({
+    name   = string
+    prefix = string
+  })
+  default = {
+    name   = "BlockStorageSubnet"
+    prefix = ""
+  }
+  description = "Subnet for zone 2 for the virtual network."
+}
+
+variable "subnet_zone3" {
+  type = object({
+    name   = string
+    prefix = string
+  })
+  default = {
+    name   = "BlockStorageSubnet"
+    prefix = ""
+  }
+  description = "Subnet for zone 3 for the virtual network."
 }
 
 variable "bastion_subnet" {
