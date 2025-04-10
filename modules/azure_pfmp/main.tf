@@ -24,13 +24,10 @@ locals {
 
   availability_zones = var.cluster.is_multi_az ? var.availability_zones : [element(var.availability_zones, 0)]
 
-  invalid_rg_name = "!!i_am_not_a_valid_name!!"
-  resource_group  = coalesce(var.existing_resource_group, local.invalid_rg_name) == local.invalid_rg_name ? azurerm_resource_group.pflex_rg[0] : data.azurerm_resource_group.pflex_rg[0]
 }
 
 ## Get resource group
 data "azurerm_resource_group" "pflex_rg" {
-  count = coalesce(var.existing_resource_group, local.invalid_rg_name) != local.invalid_rg_name ? 1 : 0
   name  = var.existing_resource_group
 }
 
