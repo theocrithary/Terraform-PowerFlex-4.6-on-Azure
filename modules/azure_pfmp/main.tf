@@ -145,7 +145,7 @@ resource "azurerm_linux_virtual_machine" "storage_instance" {
     product   = var.storage_instance_gallery_image.offer
   }
 
-  source_image_id = data.azurerm_shared_image.storage_instance.id
+  source_image_id = data.azurerm_shared_image.storage_image.id
 
   disable_password_authentication = false
   admin_username                  = var.login_credential.username
@@ -239,7 +239,7 @@ resource "azurerm_linux_virtual_machine" "installer" {
     product   = var.installer_gallery_image.offer
   }
 
-  source_image_id = data.azurerm_shared_image.installer.id
+  source_image_id = data.azurerm_shared_image.installer_image.id
 
   disable_password_authentication = false
   admin_username                  = var.login_credential.username
