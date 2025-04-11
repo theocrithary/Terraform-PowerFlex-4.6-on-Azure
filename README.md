@@ -155,7 +155,7 @@ unzip PowerFlex_4.5.2100.105_SLES15.4.zip
 ```
 ### Download the Azure core Terraform scripts
 ```
-wget https://github.com/dell/terraform-powerflex-modules.git
+wget https://github.com/dell/terraform-powerflex-modules/archive/refs/heads/main.zip
 ```
 ### Confirm the files are downloaded and copy the tfvars file into the azure-core directory
 ```
