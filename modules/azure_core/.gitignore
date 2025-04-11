@@ -6,5 +6,3 @@ terraform.tfstate
 terraform.tfstate.*
 
 terraform.tfvars
-keys/*
-do_not_commit.txt
