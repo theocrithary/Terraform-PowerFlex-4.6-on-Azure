@@ -192,3 +192,5 @@ terraform plan
 terraform apply -auto-approve
 ```
 ### This step can be monitored via the PowerFlex Manager UI under Monitoring | Events
+
+### There may be an error with the storage pool spare capacity being less than the configured fault set. To resolve this error, change the default setting of the storage pool spare capacity from 35 to 50%
