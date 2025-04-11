@@ -18,45 +18,40 @@
 ### cluster
 cluster_node_count      = 6          # Minimum of 5. If is_multi_az = true, then minimum of 6
 deployment_type         = "balanced" # balanced, optimized_v1 or optimized_v2
-enable_bastion          = false
-enable_jumphost         = false
-enable_sql_workload_vm  = false # If enabled, will deploy Standard_D4ds_v5.
 subscription_id         = "xxxxxxxxxxxxxxxxxxxxxxxxxxx"
-existing_resource_group = "xxxxx"  # If null, a new RG will be created, else provide an existing "RG name"
+existing_resource_group = "xxxxxxxxxx"  # If null, a new RG will be created, else provide an existing "RG name"
 is_multi_az             = true
-location                = "xxxxx"
-prefix                  = "xxxxx"
+location                = "northeurope"
+prefix                  = "xxxxxxxxxx"
 ssh_key                 = {
-    public  = "./keys/xxxxx.pub"
-    private = "./keys/xxxxx.pem"
-  }
+    public  = "./keys/azure-powerflex-keypair.pub"
+    private = "./keys/azure-powerflex-keypair.pem"
+}
 storage_instance_gallery_image = {
     name                = "latest"
-    image_name          = "xxxxx"
-    gallery_name        = "xxxxx"
-    resource_group_name = "xxxxx"
+    image_name          = "xxxxxxxxxx"
+    gallery_name        = "xxxxxxxxxx"
+    resource_group_name = "xxxxxxxxxx"
+    publisher           = "dellemc"
+    offer               = "dell_apex_block_storage"
+    sku                 = "apexblockstorage-4_6_0"
+
 }
 installer_gallery_image = {
     name                = "latest"
-    image_name          = "xxxxx"
-    gallery_name        = "xxxxx"
-    resource_group_name = "xxxxx"
+    image_name          = "xxxxxxxxxx"
+    gallery_name        = "xxxxxxxxxx"
+    resource_group_name = "xxxxxxxxxx"
+    publisher           = "dellemc"
+    offer               = "dell_apex_block_storage"
+    sku                 = "apexblockstorageinstaller-4_6_0"
 }
-vnet_address_space      = "x.x.x.x/24"
-subnets                 = [
-    {
-      name   = "xxxxx"
-      prefix = "x.x.x.x/28"
-    },
-    {
-      name   = "xxxxx"
-      prefix = "x.x.x.x/28"
-    },
-    {
-      name   = "xxxxx"
-      prefix = "x.x.x.x/28"
-    }
-]
+vnet_name               = "xxxxxxxxxx"
+vnet_resource_group     = "xxxxxxxxxx"
+vnet_address_space      = "xxxxxxxxxx"
+subnet_zone1            = "xxxxxxxxxx"
+subnet_zone2            = "xxxxxxxxxx"
+subnet_zone3            = "xxxxxxxxxx"
 
 ### data disk
 ### the following value won't take effect on optimized_v1 and optimized_v2 deployment
