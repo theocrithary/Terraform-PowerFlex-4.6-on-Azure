@@ -155,16 +155,24 @@ unzip PowerFlex_4.5.2100.105_SLES15.4.zip
 ```
 ### Download the Azure core Terraform scripts
 ```
-wget https://github.com/dell/terraform-powerflex-modules/archive/refs/heads/main.zip
+wget https://github.com/theocrithary/Terraform-PowerFlex-4.6-on-Azure/archive/refs/heads/main.zip
 ```
 ### Extract and cd into the azure core
 ```
 unzip main.zip
-cd terraform-powerflex-modules-azure-block-storage/examples/azure_core
+cd Terraform-PowerFlex-4.6-on-Azure-main/modules/azure_core
 ```
 ### Confirm the files are downloaded and copy the tfvars file into the azure-core directory
 ```
 cp ../../../terraform.tfvars .
+```
+### Add insecure variable to the tfvars config
+```
+vi terraform.tfvars
+```
+- add the following below the endpoint variable
+```
+insecure = true
 ```
 ### Initialize the Terraform deployment
 ```
