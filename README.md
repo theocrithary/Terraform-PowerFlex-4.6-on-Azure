@@ -149,13 +149,21 @@ wget https://github.com/dell/terraform-powerflex-modules.git
 ```
 cp terraform.tfvars azure-core
 cd azure_core
-
+```
+- Initialize the Terraform deployment
+```
 terraform init -upgrade
-Copy terraform.tfvars and create a terraform execution plan
-
-cp /root/terraform.tfvars .
-terraform plan -out main.tfplan
-Apply the terraform execution plan. This process will execute for roughly 5 minutes. +/-.
-
-terraform apply main.tfplan
-This step can be monitored via the PowerFlex Manager UI under Monitoring | Events
+```
+- Validate the Terraform code
+```
+terraform validate
+```
+- Check the plan to confirm the desired actions
+```
+terraform plan
+```
+- Apply the plan
+```
+terraform apply -auto-approve
+```
+- This step can be monitored via the PowerFlex Manager UI under Monitoring | Events
