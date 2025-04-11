@@ -130,51 +130,52 @@ ssh -i azure.pem pflexuser@<InstallerIP>
 ```
 az vm list-ip-addresses --resource-group <your-resource-group> --name <your-vm-name> --query "[].virtualMachine.network.privateIpAddresses[0]" --output tsv
 ```
-- Check /root folder, make sure terraform.tfvars for PowerFlex core deployment has been automatically generated.
+### Check /root folder, make sure terraform.tfvars for PowerFlex core deployment has been automatically generated.
 ```
 sudo -i
 cd /root
 cat terraform.tfvars
 ```
-- See below for the link to the PowerFlex software. Login required. The process will need the proper PowerFlex bits in the /root folder to continue.
+### See below for the link to the PowerFlex software. Login required. The process will need the proper PowerFlex bits in the /root folder to continue.
 https://www.dell.com/support/product-details/en-us/product/scaleio/drivers
 
 - 4.6.0 = 4.5.2100.105 (default build for this current Terraform)
 - Extract Software_Only_Complete_4.6.0_105.zip
 - Extract PowerFlex_4.5.2100.105_Complete_Core_SW.zip
 - Extract and copy PowerFlex_4.5.2100.105_SLES15.4.zip to installer /root folder and unzip. (e.g. scp -i .\azure-powerflex-keypair.pem .\PowerFlex_4.5.2100.105_SLES15.4.zip pflexuser@x.x.x.x:/home/pflexuser)
-- Move the file to /root directory and change owner to root
+
+### Move the file to /root directory and change owner to root
 ```
 mv /home/pflexuser/PowerFlex_4.5.2100.105_SLES15.4.zip /root
 chown root:root PowerFlex_4.5.2100.105_SLES15.4.zip
 ```
-- Extract the zip
+### Extract the zip
 ```
 unzip PowerFlex_4.5.2100.105_SLES15.4.zip
 ```
-- Download the Azure core Terraform scripts
+### Download the Azure core Terraform scripts
 ```
 wget https://github.com/dell/terraform-powerflex-modules.git
 ```
-- Confirm the files are downloaded and copy the tfvars file into the azure-core directory
+### Confirm the files are downloaded and copy the tfvars file into the azure-core directory
 ```
 cp terraform.tfvars azure-core
 cd azure_core
 ```
-- Initialize the Terraform deployment
+### Initialize the Terraform deployment
 ```
 terraform init -upgrade
 ```
-- Validate the Terraform code
+### Validate the Terraform code
 ```
 terraform validate
 ```
-- Check the plan to confirm the desired actions
+### Check the plan to confirm the desired actions
 ```
 terraform plan
 ```
-- Apply the plan
+### Apply the plan
 ```
 terraform apply -auto-approve
 ```
-- This step can be monitored via the PowerFlex Manager UI under Monitoring | Events
+### This step can be monitored via the PowerFlex Manager UI under Monitoring | Events
