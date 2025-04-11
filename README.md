@@ -44,7 +44,7 @@ git clone https://github.com/theocrithary/Terraform-PowerFlex-4.6-on-Azure.git
 cd Terraform-PowerFlex-4.6-on-Azure
 ```
 
-## Step 2: Prepare the tfvars file with your environment variables
+## Step 2: Prepare the tfvars file with your environment variables & copy the Azure public / private keys
 
 ### Rename the terraform-example.tfvars file to terraform.tfvars
 ```
@@ -54,6 +54,17 @@ mv terraform-example.tfvars terraform.tfvars
 ### Edit the terraform.tfvars file and replace any variables with your own environment variables
 ```
 vi terraform.tfvars
+```
+
+### Create a directory and store your keys that will be copied to the Azure VM's
+```
+mkdir keys
+```
+- Either manually create the pem and pub keys using a copy / paste from clipboard and using the vi editor, or scp the files from another host
+- The keys should look like the below and match the terraform.tfvars variable defined earlier
+```
+/keys/azure-powerflex-keypair.pub
+/keys/azure-powerflex-keypair.pem
 ```
 
 ## Step 2: Run the Terraform deployment to install the PFMP cluster
