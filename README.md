@@ -157,10 +157,14 @@ unzip PowerFlex_4.5.2100.105_SLES15.4.zip
 ```
 wget https://github.com/dell/terraform-powerflex-modules/archive/refs/heads/main.zip
 ```
+### Extract and cd into the azure core
+```
+unzip main.zip
+cd terraform-powerflex-modules-azure-block-storage/examples/azure_core
+```
 ### Confirm the files are downloaded and copy the tfvars file into the azure-core directory
 ```
-cp terraform.tfvars azure-core
-cd azure_core
+cp ../../../terraform.tfvars .
 ```
 ### Initialize the Terraform deployment
 ```
@@ -174,6 +178,7 @@ terraform validate
 ```
 terraform plan
 ```
+
 ### Apply the plan
 ```
 terraform apply -auto-approve

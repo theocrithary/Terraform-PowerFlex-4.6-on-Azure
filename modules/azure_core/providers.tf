@@ -26,3 +26,20 @@ terraform {
   }
 }
 
+provider "powerflex" {
+  username = var.username
+  password = var.password
+  endpoint = var.endpoint
+  insecure = var.insecure
+  timeout  = 120
+
+  ## The provider can also be set using environment variables
+  ## If environment variables are set it will override this configuration
+  ## Example environment variables
+  # POWERFLEX_USERNAME="username"
+  # POWERFLEX_PASSWORD="password"
+  # POWERFLEX_ENDPOINT="https://yourhost.host.com"
+  # POWERFLEX_INSECURE="true"
+  # POWERFLEX_TIMEOUT="120"
+}
+
